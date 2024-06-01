@@ -1,8 +1,9 @@
 import {RootState} from '@src/store';
 import {setLeaderboard} from '@src/store/actions/leaderboardActions';
 import {SortBy} from '@src/store/actions/types';
-import {User} from '@src/store/reducers/types';
+import {Sort, User} from '@src/store/reducers/types';
 import {initFuse} from '@src/utils/fuse';
+import {sortUser} from '@src/utils/helpers';
 import {IFuseOptions} from 'fuse.js';
 import {useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -38,7 +39,13 @@ const useSearchbar = () => {
     searchRef.current = text;
     const searchResult = fuse.search(text);
 
-    setFuzzySearch(searchResult.map(result => result.item.name));
+    const sortedResult = sortUser({
+      rank: searchResult.map(result => result.item),
+      sortBy: SortBy.BANANAS,
+      sort: Sort.ASC,
+    });
+
+    setFuzzySearch(sortedResult.map(item => item.name));
   };
 
   const clearFuzzySearch = () => setFuzzySearch(null);
