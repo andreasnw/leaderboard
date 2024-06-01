@@ -1,4 +1,4 @@
-export type User = {
+export type UnprocessedUser = {
   bananas: number;
   lastDayPlayed: string;
   longestStreak: number;
@@ -8,8 +8,23 @@ export type User = {
   uid: string;
 };
 
-export type Users = Record<string, User>;
+export interface User extends UnprocessedUser {
+  rank: number;
+  index: number;
+}
+
+export type Users = Record<string, UnprocessedUser>;
+
+export enum Sort {
+  ASC = 'asc',
+  DESC = 'desc',
+}
 
 export type LeaderboardState = {
   leaderboard: Array<User> | null;
+  rank: Array<User> | null;
+  searchResult: User | null | false;
+  sortBy: keyof Users;
+  sort: Sort;
+  search: string | null;
 };
